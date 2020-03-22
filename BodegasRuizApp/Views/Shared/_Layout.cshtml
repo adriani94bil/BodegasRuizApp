@@ -11,9 +11,12 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-secondary border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BodegasRuiz</a>
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index" style="font-style:italic">
+                    <img src="~/img/firma.png" width="30" height="30" class="d-inline-block align-top" alt="logo">
+                    BodegasRuiz
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,21 +25,21 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Nosotros</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Nuestros Productos</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Productos" asp-action="Index">Nuestros Productos</a>
                         </li>
                         <li class="nav-item">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Administrador
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ubicaciones" asp-action="Index">Almacén</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="ProductoUbicaciones" asp-action="Index">Productos por Ubicación</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Prueba Privacy</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Control Ordenes de compra</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2" id="barraAdmin">
+                                    <a class="nav-link text-light bg-secondary" asp-area="" asp-controller="Ubicaciones" asp-action="Index">Almacén</a>
+                                    <a class="nav-link text-light bg-secondary" asp-area="" asp-controller="ProductoUbicaciones" asp-action="Index">Productos por Ubicación</a>
+                                    <a class="nav-link text-light bg-secondary" asp-area="" asp-controller="Home" asp-action="Privacy">Prueba Privacy</a>
+                                    <a class="nav-link text-light bg-secondary" asp-area="" asp-controller="" asp-action="">Control Ordenes de compra</a>
                                 </div>
                             </div>
                         </li>
@@ -51,7 +54,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted bg-light">
+    <footer class="border-top footer text-light bg-secondary">
         <div class="container">
             &copy; 2020 - BodegasRuiz | Leafletjs | Mapbox
         </div>

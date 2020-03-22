@@ -76,6 +76,10 @@ body {
     color: darkred;
     margin-top: 3rem;
 }
+#barraAdmin{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
 /* Maps
 -------------------------------------------------- */
 #map {
@@ -89,5 +93,5 @@ body {
 -------------------------------------------------- */
 #cepa {
     height: 35rem;
-    width: 80%;
+    width: 50rem;
 }
