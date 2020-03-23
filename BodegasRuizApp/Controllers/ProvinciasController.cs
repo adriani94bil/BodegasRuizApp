@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BodegasRuizApp.Data;
 using BodegasRuizApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BodegasRuizApp.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class ProvinciasController : Controller
     {
         private readonly ApplicationDbContext _context;

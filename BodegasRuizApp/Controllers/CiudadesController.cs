@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BodegasRuizApp.Controllers
 {
     //Solo el administrador puede generar ciudades
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class CiudadesController : Controller
     {
         private readonly ApplicationDbContext _context;

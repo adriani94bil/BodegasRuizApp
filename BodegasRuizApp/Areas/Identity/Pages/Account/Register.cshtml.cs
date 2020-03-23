@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using BodegasRuizApp.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using BodegasRuizApp.Services;
 
 namespace BodegasRuizApp.Areas.Identity.Pages.Account
 {
@@ -26,19 +28,21 @@ namespace BodegasRuizApp.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
-
+        private readonly Servicio _servicio;
         public RegisterModel(
             UserManager<Usuario> userManager,
             SignInManager<Usuario> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-             ApplicationDbContext context)
+             ApplicationDbContext context,
+             Servicio servicio)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _servicio = servicio;
         }
 
         [BindProperty]
@@ -80,10 +84,12 @@ namespace BodegasRuizApp.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            public Guid CiudadId { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            ViewData["CiudadId"] = new SelectList(_context.Ciudad, "CiudadId", "Nombre");
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -92,54 +98,60 @@ namespace BodegasRuizApp.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+            if (_servicio.IsUnderage(Input.FechaNacimiento)==false)
             {
-                var user = new Usuario { 
-                    Nombre=Input.Nombre,
-                    Apellido=Input.Apellido,
-                    FechaNacimiento=Input.FechaNacimiento,
-                    UserName = Input.Email, 
-                    Email = Input.Email 
-                };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
-                {
-                    //Todos los usuarios que se registren seran user por defecto, el admin se cambia a mano en la BD
-                    await _userManager.AddToRoleAsync(user, "user");
-                    ///
-                    //
-                    //
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                return RedirectToAction("Privacy", "Home");
             }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = new Usuario
+                    {
+                        Nombre = Input.Nombre,
+                        Apellido = Input.Apellido,
+                        FechaNacimiento = Input.FechaNacimiento,
+                        UserName = Input.Email,
+                        Email = Input.Email,
+                        CiudadId = Input.CiudadId
+                    };
+                        var result = await _userManager.CreateAsync(user, Input.Password);
+                        if (result.Succeeded)
+                        {
+                            //Todos los usuarios que se registren seran user por defecto, el admin se cambia a mano en la BD
+                            await _userManager.AddToRoleAsync(user, "user");
+                            _logger.LogInformation("User created a new account with password.");
 
-            // If we got this far, something failed, redisplay form
-            return Page();
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            var callbackUrl = Url.Page(
+                                "/Account/ConfirmEmail",
+                                pageHandler: null,
+                                values: new { area = "Identity", userId = user.Id, code = code },
+                                protocol: Request.Scheme);
+
+                            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            {
+                                return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                            }
+                            else
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                                return LocalRedirect(returnUrl);
+                            }
+                        }
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                }
+
+                // If we got this far, something failed, redisplay form
+                return Page();
+            }
         }
     }
 }

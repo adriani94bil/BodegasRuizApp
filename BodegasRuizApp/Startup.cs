@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BodegasRuizApp.Models;
+using BodegasRuizApp.Services;
 
 namespace BodegasRuizApp
 {
@@ -43,6 +44,7 @@ namespace BodegasRuizApp
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddSingleton<Servicio>();
             services.AddRazorPages();
         }
 
