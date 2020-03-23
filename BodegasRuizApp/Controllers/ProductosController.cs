@@ -22,7 +22,10 @@ namespace BodegasRuizApp.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Producto.Include(x=>x.Favoritos).Include(p=>p.Precios).ToListAsync());
+            return View(await _context.Producto
+                .Include(x=>x.Favoritos)
+                .Include(p=>p.Precios).ThenInclude(p=>p.Usuario).ThenInclude(p=>p.Ciudad).ThenInclude(p=>p.Provincia)
+                .ToListAsync());
         }
 
         // GET: Productos/Details/5

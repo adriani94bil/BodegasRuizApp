@@ -18,24 +18,38 @@
             <th>
                 @Html.DisplayNameFor(model => model.PosicionY)
             </th>
+            <th>
+                Articulos por estanteria
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PosicionX)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PosicionY)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UbicacionId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UbicacionId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UbicacionId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PosicionX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PosicionY)
+                </td>
+                <td>
+                    <ul class="list-group list-group-flush" id="demo_@item.UbicacionId">
+                        @foreach (ProductoUbicacion produ in item.UbicacionProducto)
+                        {
+                            <li>
+                                @produ.Producto.Nombre @produ.Producto.Añada Cantidad disponible: @produ.Producto.CantidadTotal
+                            </li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UbicacionId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UbicacionId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UbicacionId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

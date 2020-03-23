@@ -1,77 +1,56 @@
 ﻿@model IEnumerable<BodegasRuizApp.Models.Producto>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Nuestros vinos</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CantidadTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrecioStd)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiasBarrica)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Añada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GradoAlc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CantidadTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioStd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DiasBarrica)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Añada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GradoAlc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Foto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductoId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductoId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductoId">Delete</a>
-            </td>
-        </tr>
+@if (User.IsInRole("admin")) {
+    <p>
+        <a asp-action="Create">Crear nuevo artículo</a>
+    </p>
 }
-    </tbody>
-</table>
+<div class="row row-cols-1 row-cols-md-3">
+    @foreach (var item in Model)
+    {
+        <div class="col mb-4 accordion">
+            <div class="card text-center" style="width: 18rem;">
+                <div class="card-header">
+                    <img class="card-img" src="~/img/@item.Foto" data-toggle="collapse" data-target="#demo_@item.ProductoId" alt="@item.Nombre @item.Añada">
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">@item.Nombre</h4>
+                    <h6 class="card-text"> Añada @item.Añada</h6>
+                </div>
+                <ul class="list-group list-group-flush panel-collapse collapse" id="demo_@item.ProductoId">
+                    <li class="list-group-item">Dias en barrica:@item.DiasBarrica</li>
+                    <li class="list-group-item">% alcohol: @item.GradoAlc</li>
+                    <li class="list-group-item">Cantidad disponible: @item.CantidadTotal</li>
+                    <li class="list-group-item">Precio por unidad: @item.PrecioStd</li>
+                    @if (User.IsInRole("user") || User.IsInRole("admin"))
+                    {
+                        <form asp-controller="Compras" asp-action="Create">
+                            <input type="number" name="cantidad" placeholder="Cantidad a pedir " />
+                            <button type="submit" class="btn btn-secondary">Comprar</button>
+                        </form>
+                        <form asp-controller="Favoritos" asp-action="Create">
+                            <button type="submit" class="btn btn-secondary">Favorito</button>
+                        </form>
+                    }
+                </ul>
+                @if (User.IsInRole("admin"))
+                {
+                    <div class="card-body">
+                        <a asp-action="Edit" asp-route-id="@item.ProductoId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProductoId">Details</a> |
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+

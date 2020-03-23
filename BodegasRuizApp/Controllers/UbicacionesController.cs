@@ -24,7 +24,7 @@ namespace BodegasRuizApp.Controllers
         // GET: Ubicaciones
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Ubicacion.ToListAsync());
+            return View(await _context.Ubicacion.OrderBy(u=>u.PosicionX).Include(u=>u.UbicacionProducto).ThenInclude(u=>u.Producto).ToListAsync());
         }
 
         // GET: Ubicaciones/Details/5
