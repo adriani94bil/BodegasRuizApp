@@ -24,7 +24,7 @@ namespace BodegasRuizApp.Controllers
         // GET: Compras
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Compra.Where(c=>c.Usuario.Nombre==User.Identity.Name).Include(c=>c.Producto).ToListAsync());
+            return View(await _context.Compra.ToListAsync());
         }
 
         // GET: Compras/Details/5
@@ -56,7 +56,7 @@ namespace BodegasRuizApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId,Producto")] Compra compra,string cantidad)
+        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId,Producto")] Compra compra)
         {
             if (ModelState.IsValid)
             {
@@ -64,12 +64,9 @@ namespace BodegasRuizApp.Controllers
                 string po = _servicio.POGen();
                 //Genero la fecha de compra
                 DateTime fechaComp = DateTime.Now;
-                //Cantidad comprada 
-                int num = Convert.ToInt32(cantidad);
                 //Mando los valores como view data
                 ViewData["PO"] = po;
                 ViewData["FECHA"] = fechaComp;
-                ViewData["Cantidad"] = num;
                 compra.CompraId = Guid.NewGuid();
                 _context.Add(compra);
                 await _context.SaveChangesAsync();

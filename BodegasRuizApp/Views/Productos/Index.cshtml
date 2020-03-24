@@ -34,13 +34,10 @@
                     <li class="list-group-item">Precio por unidad: @item.PrecioStd</li>
                     @if (User.IsInRole("user") || User.IsInRole("admin"))
                     {
-                        <form asp-controller="Compras" asp-action="Create">
-                            <input type="text" name="cantidad" placeholder="Cantidad a pedir" />
-                            <button type="submit" class="btn btn-secondary">Comprar</button>
-                        </form>
-                        <form asp-controller="Favoritos" asp-action="Create">
-                            <button type="submit" class="btn btn-secondary">Favorito</button>
-                        </form>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a class="btn btn-secondary" type="button" asp-controller="Compras" asp-action="Create" role="button">Comprar</a>
+                            <a class="btn btn-secondary" type="button" asp-controller="Favoritos" asp-action="Create" role="button">Favorito</a>
+                        </div>
                     }
                 </ul>
                 @if (User.IsInRole("admin"))
