@@ -2,7 +2,7 @@
 
 namespace BodegasRuizApp.Data.Migrations
 {
-    public partial class ModelsV2 : Migration
+    public partial class _2403 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

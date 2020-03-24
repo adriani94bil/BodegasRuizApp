@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BodegasRuizApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200322180204_compr")]
-    partial class compr
+    [Migration("20200324153742_2403")]
+    partial class _2403
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

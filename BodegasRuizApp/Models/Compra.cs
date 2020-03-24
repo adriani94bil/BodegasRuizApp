@@ -12,7 +12,7 @@ namespace BodegasRuizApp.Models
         public string OrdenCompra { get; set; }
         public int CantidadComprada { get; set; }
         [DataType(DataType.Date)]
-        [Display(Name = "Fecha de Favorito")]
+        [Display(Name = "Fecha de Compra")]
         public DateTime FechaFavorito { get; set; }
         public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; }

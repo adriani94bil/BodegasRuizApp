@@ -7,18 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BodegasRuizApp.Data;
 using BodegasRuizApp.Models;
-using BodegasRuizApp.Services;
 
 namespace BodegasRuizApp.Controllers
 {
     public class ComprasController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly Servicio _servicio;
-        public ComprasController(ApplicationDbContext context, Servicio servicio)
+
+        public ComprasController(ApplicationDbContext context)
         {
             _context = context;
-            _servicio = servicio;
         }
 
         // GET: Compras
@@ -48,6 +46,8 @@ namespace BodegasRuizApp.Controllers
         // GET: Compras/Create
         public IActionResult Create()
         {
+            ViewData["UsuarioId"] = new SelectList(_context.Set<Usuario>(), "UsuarioId", "Nombre");
+            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "Nombre");
             return View();
         }
 
@@ -56,22 +56,17 @@ namespace BodegasRuizApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId,Producto")] Compra compra)
+        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId")] Compra compra)
         {
             if (ModelState.IsValid)
             {
-                //Genero el string con el Po
-                string po = _servicio.POGen();
-                //Genero la fecha de compra
-                DateTime fechaComp = DateTime.Now;
-                //Mando los valores como view data
-                ViewData["PO"] = po;
-                ViewData["FECHA"] = fechaComp;
                 compra.CompraId = Guid.NewGuid();
                 _context.Add(compra);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Set<Usuario>(), "UsuarioId", "Nombre", compra.UsuarioId);
+            ViewData["ProductoId"] = new SelectList(_context.Set<Usuario>(), "ProductoId", "Nombre", compra.ProductoId);
             return View(compra);
         }
 
@@ -159,34 +154,5 @@ namespace BodegasRuizApp.Controllers
         {
             return _context.Compra.Any(e => e.CompraId == id);
         }
-        // GET: Compras/CreatePO
-        //public IActionResult CreatePO()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Compras/CreatePO
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreatePO(Guid? producto, string cantidad)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        //Genero el string con el Po
-        //        string po = _servicio.POGen();
-        //        //Genero la fecha de compra
-        //        DateTime fechaComp = DateTime.Now;
-        //        //Cantidad comprada 
-        //        int num = Convert.ToInt32(cantidad);
-
-        //        compra.CompraId = Guid.NewGuid();
-        //        _context.Add(compra);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(compra);
-        //}
     }
 }

@@ -46,6 +46,7 @@ namespace BodegasRuizApp.Controllers
         // GET: Favoritos/Create
         public IActionResult Create()
         {
+            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "Nombre");
             return View();
         }
 
@@ -63,6 +64,7 @@ namespace BodegasRuizApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "Nombre", favorito.ProductoId);
             return View(favorito);
         }
 
