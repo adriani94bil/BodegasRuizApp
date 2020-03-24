@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Añadir Posiciones Almacén</a>
 </p>
-<table class="table">
+<table  class="table table-striped table-bordered"  id="ubicacion" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th>
@@ -35,7 +35,7 @@
                     @Html.DisplayFor(modelItem => item.PosicionY)
                 </td>
                 <td>
-                    <ul class="list-group list-group-flush" id="demo_@item.UbicacionId">
+                    <ul class="list-group list-group-flush" style="list-style-type:none;" id="demo_@item.UbicacionId">
                         @foreach (ProductoUbicacion produ in item.UbicacionProducto)
                         {
                             <li>

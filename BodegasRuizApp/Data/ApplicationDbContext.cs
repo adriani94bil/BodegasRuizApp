@@ -20,5 +20,6 @@ namespace BodegasRuizApp.Data
         public DbSet<BodegasRuizApp.Models.Producto> Producto { get; set; }
         public DbSet<BodegasRuizApp.Models.ProductoUbicacion> ProductoUbicacion { get; set; }
         public DbSet<BodegasRuizApp.Models.Compra> Compra { get; set; }
+        public DbSet<BodegasRuizApp.Models.Favorito> Favorito { get; set; }
     }
 }

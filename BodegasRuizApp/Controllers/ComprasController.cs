@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BodegasRuizApp.Data;
 using BodegasRuizApp.Models;
+using BodegasRuizApp.Services;
 
 namespace BodegasRuizApp.Controllers
 {
     public class ComprasController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ComprasController(ApplicationDbContext context)
+        private readonly Servicio _servicio;
+        public ComprasController(ApplicationDbContext context, Servicio servicio)
         {
             _context = context;
+            _servicio = servicio;
         }
 
         // GET: Compras
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Compra.ToListAsync());
+            return View(await _context.Compra.Where(c=>c.Usuario.Nombre==User.Identity.Name).Include(c=>c.Producto).ToListAsync());
         }
 
         // GET: Compras/Details/5
@@ -54,10 +56,20 @@ namespace BodegasRuizApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId,Producto")] Compra compra)
+        public async Task<IActionResult> Create([Bind("CompraId,OrdenCompra,CantidadComprada,FechaFavorito,UsuarioId,ProductoId,Producto")] Compra compra,string cantidad)
         {
             if (ModelState.IsValid)
             {
+                //Genero el string con el Po
+                string po = _servicio.POGen();
+                //Genero la fecha de compra
+                DateTime fechaComp = DateTime.Now;
+                //Cantidad comprada 
+                int num = Convert.ToInt32(cantidad);
+                //Mando los valores como view data
+                ViewData["PO"] = po;
+                ViewData["FECHA"] = fechaComp;
+                ViewData["Cantidad"] = num;
                 compra.CompraId = Guid.NewGuid();
                 _context.Add(compra);
                 await _context.SaveChangesAsync();
@@ -150,5 +162,34 @@ namespace BodegasRuizApp.Controllers
         {
             return _context.Compra.Any(e => e.CompraId == id);
         }
+        // GET: Compras/CreatePO
+        //public IActionResult CreatePO()
+        //{
+        //    return View();
+        //}
+
+        //// POST: Compras/CreatePO
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreatePO(Guid? producto, string cantidad)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //Genero el string con el Po
+        //        string po = _servicio.POGen();
+        //        //Genero la fecha de compra
+        //        DateTime fechaComp = DateTime.Now;
+        //        //Cantidad comprada 
+        //        int num = Convert.ToInt32(cantidad);
+
+        //        compra.CompraId = Guid.NewGuid();
+        //        _context.Add(compra);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(compra);
+        //}
     }
 }

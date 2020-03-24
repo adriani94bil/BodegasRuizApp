@@ -31,5 +31,16 @@ namespace BodegasRuizApp.Services
             z = preciostd * mul1 * mul2;
             return z;
         }
+        public string POGen()
+        {
+            string po;
+            Random random = new Random();
+            DateTime date = DateTime.Now;
+            string dats = date.ToString("yyyy/MM/dd");
+            string num = Convert.ToString(random.Next(0, 99));
+            po = dats + num;
+            return po;
+
+        }
     }
 }

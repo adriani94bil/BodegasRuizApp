@@ -9,7 +9,8 @@
 
 <h1>Nuestros vinos</h1>
 
-@if (User.IsInRole("admin")) {
+@if (User.IsInRole("admin"))
+{
     <p>
         <a asp-action="Create">Crear nuevo artículo</a>
     </p>
@@ -34,7 +35,7 @@
                     @if (User.IsInRole("user") || User.IsInRole("admin"))
                     {
                         <form asp-controller="Compras" asp-action="Create">
-                            <input type="number" name="cantidad" placeholder="Cantidad a pedir " />
+                            <input type="text" name="cantidad" placeholder="Cantidad a pedir" />
                             <button type="submit" class="btn btn-secondary">Comprar</button>
                         </form>
                         <form asp-controller="Favoritos" asp-action="Create">
