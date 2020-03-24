@@ -22,7 +22,8 @@ namespace BodegasRuizApp.Controllers
         // GET: Favoritos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Favorito.ToListAsync());
+            var applicationDbContext = _context.Favorito.Include(f => f.Usuario).Include(f=>f.Producto);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Favoritos/Details/5
@@ -34,6 +35,7 @@ namespace BodegasRuizApp.Controllers
             }
 
             var favorito = await _context.Favorito
+                .Include(f => f.Usuario)
                 .FirstOrDefaultAsync(m => m.FavoritoId == id);
             if (favorito == null)
             {
@@ -46,7 +48,8 @@ namespace BodegasRuizApp.Controllers
         // GET: Favoritos/Create
         public IActionResult Create()
         {
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(_context.Users, "Id", "Nombre");
+            ViewData["ProductoId"] = new SelectList(_context.Users, "ProductoId", "Nombre");
             return View();
         }
 
@@ -64,7 +67,8 @@ namespace BodegasRuizApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "Nombre", favorito.ProductoId);
+            ViewData["UsuarioId"] = new SelectList(_context.Users, "Id", "Nombre", favorito.UsuarioId);
+            ViewData["ProductoId"] = new SelectList(_context.Users, "ProductoId", "Nombre", favorito.ProductoId);
             return View(favorito);
         }
 
@@ -81,6 +85,7 @@ namespace BodegasRuizApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Users, "Id", "Id", favorito.UsuarioId);
             return View(favorito);
         }
 
@@ -116,6 +121,7 @@ namespace BodegasRuizApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UsuarioId"] = new SelectList(_context.Users, "Id", "Id", favorito.UsuarioId);
             return View(favorito);
         }
 
@@ -128,6 +134,7 @@ namespace BodegasRuizApp.Controllers
             }
 
             var favorito = await _context.Favorito
+                .Include(f => f.Usuario)
                 .FirstOrDefaultAsync(m => m.FavoritoId == id);
             if (favorito == null)
             {

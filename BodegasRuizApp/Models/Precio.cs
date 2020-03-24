@@ -9,7 +9,7 @@ namespace BodegasRuizApp.Models
     {
         public Guid PrecioId { get; set; }
         public double PrecioFinal { get; set; }
-        public Guid UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
         public Guid ProductoId { get; set; }
         public string Producto { get; set; }

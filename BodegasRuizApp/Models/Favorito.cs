@@ -17,7 +17,7 @@ namespace BodegasRuizApp.Models
         [Display(Name = "Fecha quitar Favorito")]
         public DateTime FechaDesfavorito { get; set; }
         public bool EsFavorito { get; set; }
-        public Guid UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
         public Guid ProductoId { get; set; }
         public string Producto { get; set; }

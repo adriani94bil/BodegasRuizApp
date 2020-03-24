@@ -14,7 +14,7 @@ namespace BodegasRuizApp.Models
         [DataType(DataType.Date)]
         [Display(Name = "Fecha de Compra")]
         public DateTime FechaFavorito { get; set; }
-        public Guid UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
         public Guid ProductoId { get; set; }
         public string Producto { get; set; }
